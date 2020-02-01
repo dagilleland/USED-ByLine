@@ -1,0 +1,25 @@
+name: ByLine
+
+on: [create]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Echo
+      run: | 
+        echo -e "user\x3A $GITHUB_ACTOR
+        repo\x3A $GITHUB_REPOSITORY" | sudo tee .byline
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .byline
+        git commit -m "User Byline Generated"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
